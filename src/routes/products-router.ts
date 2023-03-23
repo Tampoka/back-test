@@ -21,7 +21,7 @@ productsRouter.delete('/:id', (req: Request, res: Response) => {
         res.sendStatus(404)
     }
 })
-productsRouter.post('/', body('title').isLength({min: 3, max: 10}),
+productsRouter.post('/', body('title').isLength({min: 3, max: 10}).withMessage('Title should be from 3 to 10 symbols'),
     (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
