@@ -25,6 +25,7 @@ let requestCounterdMiddleware = (req: Request, res: Response, next: NextFunction
     requestCounter++
     next()
 };
+/*
 app.use(blablaMiddleware)
 app.use(requestCounterdMiddleware)
 app.use(authGuardMiddleware)
@@ -33,6 +34,7 @@ app.get('/kuku', (req: Request, res: Response) => {
     const blabla = req.blabla
     res.send({value: blabla + '!!!' + requestCounter})
 })
+*/
 
 
 app.use('/products', productsRouter)

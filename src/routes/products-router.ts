@@ -1,5 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {productsRepo} from '../repositories/products-repo';
+import {body, validationResult} from 'express-validator';
 
 export const productsRouter = Router({})
 
@@ -20,16 +21,22 @@ productsRouter.delete('/:id', (req: Request, res: Response) => {
         res.sendStatus(404)
     }
 })
-productsRouter.post('/', (req: Request, res: Response) => {
-    const result=productsRepo.createProduct(req.body.title)
-    if (result) {
-        res.status(201).send(result)
-    } else {
-        res.sendStatus(404)
-    }
-})
+productsRouter.post('/', body('title').isLength({min: 3, max: 10}),
+    (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()})
+        }
+        const result = productsRepo.createProduct(req.body.title)
+        return res.status(201).send(result)
+        // if (result) {
+        //     res.status(201).send(result)
+        // } else {
+        //     res.sendStatus(404)
+        // }
+    })
 productsRouter.put('/:id', (req: Request, res: Response) => {
-    const result=productsRepo.updateProduct(+req.params.id,req.body.title)
+    const result = productsRepo.updateProduct(+req.params.id, req.body.title)
     if (result) {
         res.send(result)
     } else {
@@ -37,7 +44,7 @@ productsRouter.put('/:id', (req: Request, res: Response) => {
     }
 })
 productsRouter.get('/:id', (req: Request, res: Response) => {
-    const result=productsRepo.findProduct(+req.params.id)
+    const result = productsRepo.findProduct(+req.params.id)
     if (result) {
         res.send(result)
     } else {
